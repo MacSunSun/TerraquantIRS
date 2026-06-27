@@ -1,0 +1,48 @@
+{
+  "version": "1.1",
+  "focal": "AMD",
+  "companies": {
+    "AMD":  { "name": "Advanced Micro Devices", "cik": "CIK0000002488", "tier": "focal",       "sector": "Semiconductors",            "note": "CPU / GPU / FPGA designer (fabless)" },
+    "TSM":  { "name": "Taiwan Semiconductor",   "cik": "CIK0001046179", "tier": "upstream",     "sector": "Foundry",                   "note": "Primary chip manufacturer (N4 / N3 process)" },
+    "ASML": { "name": "ASML Holding",           "cik": "CIK0000937556", "tier": "upstream_t2",  "sector": "Semiconductor Equipment",   "note": "EUV lithography machines (sold to TSMC)" },
+    "AMAT": { "name": "Applied Materials",      "cik": "CIK0000796343", "tier": "upstream_t2",  "sector": "Semiconductor Equipment",   "note": "CVD / PVD deposition equipment" },
+    "LRCX": { "name": "Lam Research",           "cik": "CIK0000707549", "tier": "upstream_t2",  "sector": "Semiconductor Equipment",   "note": "Etch & deposition equipment" },
+    "KLAC": { "name": "KLA Corporation",        "cik": "CIK0000319201", "tier": "upstream_t2",  "sector": "Semiconductor Equipment",   "note": "Process control & inspection" },
+    "MU":   { "name": "Micron Technology",      "cik": "CIK0000723125", "tier": "upstream",     "sector": "Memory",                    "note": "HBM3E / GDDR7 memory for AMD GPUs" },
+    "AMKR": { "name": "Amkor Technology",       "cik": "CIK0001047127", "tier": "upstream",     "sector": "Packaging (OSAT)",          "note": "Advanced chip packaging (SoIC / CoWoS)" },
+    "NVDA": { "name": "NVIDIA Corporation",     "cik": "CIK0001045810", "tier": "peer",         "sector": "Semiconductors",            "note": "GPU competitor — data center & AI" },
+    "INTC": { "name": "Intel Corporation",      "cik": "CIK0000050863", "tier": "peer",         "sector": "Semiconductors",            "note": "CPU & data-center competitor" },
+    "QCOM": { "name": "Qualcomm",               "cik": "CIK0000804328", "tier": "peer",         "sector": "Semiconductors",            "note": "Mobile / edge processor competitor" },
+    "MSFT": { "name": "Microsoft",              "cik": "CIK0000789019", "tier": "downstream",   "sector": "Cloud / Software",          "note": "Azure cloud (EPYC CPUs) + Xbox (custom APU)" },
+    "META": { "name": "Meta Platforms",         "cik": "CIK0001326801", "tier": "downstream",   "sector": "Internet / AI",             "note": "AI infrastructure (AMD MI300X GPUs)" },
+    "AMZN": { "name": "Amazon",                 "cik": "CIK0001018724", "tier": "downstream",   "sector": "Cloud",                     "note": "AWS EC2 (AMD EPYC CPUs)" },
+    "GOOGL":{ "name": "Alphabet",               "cik": "CIK0001652044", "tier": "downstream",   "sector": "Cloud / AI",                "note": "GCP (EPYC CPUs + Instinct GPUs)" },
+    "DELL": { "name": "Dell Technologies",      "cik": "CIK0001571123", "tier": "downstream",   "sector": "Hardware OEM",              "note": "AMD-based servers, workstations & PCs" },
+    "HPE":  { "name": "Hewlett Packard Enterprise","cik":"CIK0001645590","tier": "downstream",   "sector": "Hardware OEM",              "note": "ProLiant servers (AMD EPYC)" }
+  },
+  "relationships": [
+    { "from": "ASML", "to": "TSM",  "type": "supplies_equipment",  "note": "EUV lithography machines" },
+    { "from": "AMAT", "to": "TSM",  "type": "supplies_equipment",  "note": "CVD / PVD deposition tools" },
+    { "from": "LRCX", "to": "TSM",  "type": "supplies_equipment",  "note": "Etch tools" },
+    { "from": "KLAC", "to": "TSM",  "type": "supplies_equipment",  "note": "Inspection & metrology" },
+    { "from": "TSM",  "to": "AMD",  "type": "manufactures_for",    "note": "Manufactures AMD chips on N4 / N3 process" },
+    { "from": "MU",   "to": "AMD",  "type": "supplies_component",  "note": "HBM3E memory for MI300X / RX 9000" },
+    { "from": "AMKR", "to": "AMD",  "type": "packages_for",        "note": "Advanced chiplet packaging" },
+    { "from": "AMD",  "to": "MSFT", "type": "sells_to",            "note": "EPYC CPUs (Azure) + custom APU (Xbox Series X/S)" },
+    { "from": "AMD",  "to": "META", "type": "sells_to",            "note": "MI300X AI GPUs for LLM training" },
+    { "from": "AMD",  "to": "AMZN", "type": "sells_to",            "note": "EPYC CPUs (AWS EC2 instances)" },
+    { "from": "AMD",  "to": "GOOGL","type": "sells_to",            "note": "EPYC CPUs + Instinct GPUs (GCP)" },
+    { "from": "AMD",  "to": "DELL", "type": "sells_to",            "note": "CPUs & GPUs for servers / workstations" },
+    { "from": "AMD",  "to": "HPE",  "type": "sells_to",            "note": "EPYC CPUs for ProLiant servers" },
+    { "from": "AMD",  "to": "NVDA", "type": "competes_with",       "note": "GPU competition — data center, AI, gaming" },
+    { "from": "AMD",  "to": "INTC", "type": "competes_with",       "note": "CPU & server-chip competition" },
+    { "from": "AMD",  "to": "QCOM", "type": "competes_with",       "note": "ARM laptop / edge competition" }
+  ],
+  "tier_meta": {
+    "upstream_t2": { "label": "设备层 (Tier-2 Upstream)", "color": "#6c757d" },
+    "upstream":    { "label": "直接上游",                  "color": "#fd7e14" },
+    "focal":       { "label": "核心公司",                  "color": "#0d6efd" },
+    "peer":        { "label": "竞争对手",                  "color": "#dc3545" },
+    "downstream":  { "label": "下游客户",                  "color": "#198754" }
+  }
+}

@@ -1,0 +1,46 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.spec
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── Large SEC filing text files (hundreds of MB) ──────────────────────────────
+*/10Q_10K/**/*.txt
+*/8K/**/*.txt
+*/extracted/
+
+# ── PDF reports ───────────────────────────────────────────────────────────────
+*.pdf
+
+# ── Excel / CSV data dumps ────────────────────────────────────────────────────
+*.xlsx
+*.csv
+
+# ── Compiled / packaged executable ────────────────────────────────────────────
+Release/
+*.exe
+
+# ── Streamlit secrets (never commit) ─────────────────────────────────────────
+research_app/.streamlit/secrets.toml
+.streamlit/secrets.toml
+
+# ── Environment / IDE ─────────────────────────────────────────────────────────
+.env
+.venv/
+venv/
+*.env
+.vscode/
+.idea/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
