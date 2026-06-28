@@ -1,19 +1,22 @@
 export default function (component) {
   const { data, parentElement, setTriggerValue } = component;
+  if (!parentElement) return;
+
   const args = (data && data.payload) || {};
   const height = (data && data.height) || args.height || 620;
+  const mode = args.mode || "full";
 
+  const rootEl = parentElement.querySelector(".vis-map-root");
   const netEl = parentElement.querySelector("#net");
   const tipEl = parentElement.querySelector("#tip");
   const labelsEl = parentElement.querySelector("#labels");
-  if (!netEl) return;
+  if (!rootEl || !netEl) return;
 
+  rootEl.classList.toggle("mode-mini", mode === "mini");
+  rootEl.classList.toggle("mode-full", mode !== "mini");
   netEl.style.height = height + "px";
-  parentElement.style.position = "relative";
-  parentElement.style.background = (args.mode === "mini") ? "#fafafa" : "#f8f9fa";
 
   function renderGraph(vis) {
-    const mode = args.mode || "full";
     const focal = args.focal || "";
     const ORIG = args.orig || {};
     const NMETA = args.nmeta || {};

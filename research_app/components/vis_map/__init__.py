@@ -10,12 +10,20 @@ with open(os.path.join(_DIR, "vis_map.js"), encoding="utf-8") as f:
     _JS = f.read()
 
 _HTML = """
-<div id="labels"></div>
-<div id="net"></div>
-<div id="tip"></div>
+<div class="vis-map-root mode-full">
+  <div id="labels"></div>
+  <div id="net"></div>
+  <div id="tip"></div>
+</div>
 """
 
 _CSS = """
+.vis-map-root {
+  position: relative;
+  width: 100%;
+}
+.vis-map-root.mode-full { background: #f8f9fa; }
+.vis-map-root.mode-mini { background: #fafafa; }
 #net { width: 100%; }
 .lbl {
   position: absolute; font-size: 11px; font-weight: 600;
