@@ -2,7 +2,7 @@
 
 A Streamlit-based investment research application for semiconductor supply chain analysis, built around AMD as the focal company with extensible support for any publicly listed company.
 
-**Live demo:** [terraquantirs.streamlit.app](https://terraquant-irs.streamlit.app)
+**Live demo:** [terraquant-irs.streamlit.app](https://terraquant-irs.streamlit.app)
 
 ---
 
