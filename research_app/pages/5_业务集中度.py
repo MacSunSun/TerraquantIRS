@@ -37,9 +37,13 @@ with st.sidebar:
     tier       = meta.get("tier", "")
     tier_color = TIER_COLORS.get(tier, "#0d6efd")
 
-    # Local 10-K directory (only used if the path actually exists on this machine)
-    _candidate = Path(r"e:\Quant\Quant\Investment Research\AMD\10Q_10K\amd\10-K")
-    LOCAL_10K_DIRS = {"AMD": str(_candidate)} if _candidate.exists() else {}
+    # Local 10-K directories — only used when the path exists on this machine
+    _base = Path(r"e:\Quant\Quant\Investment Research")
+    _candidates = {
+        "AMD":  _base / "AMD"  / "10Q_10K" / "amd"  / "10-K",
+        "NVDA": _base / "NVDA" / "10Q_10K" / "nvda" / "10-K",
+    }
+    LOCAL_10K_DIRS = {k: str(v) for k, v in _candidates.items() if v.exists()}
     local_dir = LOCAL_10K_DIRS.get(selected, "")
 
     st.divider()

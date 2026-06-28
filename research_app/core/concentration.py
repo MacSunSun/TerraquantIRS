@@ -25,8 +25,8 @@ USER_AGENT = "research-app contact@example.com"
 # ── Known segment name sets (add more companies here) ────────────────────────
 KNOWN_SEGMENTS: dict[str, list[str]] = {
     "AMD":  ["Data Center", "Client", "Gaming", "Embedded"],
-    "NVDA": ["Data Center", "Gaming", "Professional Visualization",
-             "Automotive", "OEM & Other"],
+    # FY2024+ (post-reorganisation): two reportable segments
+    "NVDA": ["Compute & Networking", "Graphics"],
     "INTC": ["CCG", "DCG", "IOTG", "Mobileye", "PSG", "NEX", "Intel Foundry"],
     "QCOM": ["QCT", "QTL"],
     "AVGO": ["Semiconductor Solutions", "Infrastructure Software"],
