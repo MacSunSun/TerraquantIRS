@@ -61,13 +61,11 @@ def build_full_map_html(chain: dict, active_tiers: set[str] | None = None, heigh
         nodes_data.append({
             "id":          ticker,
             "label":       ticker,
-            "title":       (f"<b>{ticker}</b> — {meta['name']}<br>"
-                           f"<span style='color:#aaa'>层级：</span>"
-                           f"{TIER_LABELS.get(tier, tier)}<br>"
-                           f"{meta.get('sector','')}<br>"
-                           f"<i>{meta.get('note','')}</i>"),
-            "color":       {"background": color, "border": border_color,
-                            "hover": {"background": color, "border": "#000"}},
+            "title":       (f"{ticker} — {meta['name']}\n"
+                           f"{TIER_LABELS.get(tier, tier)}\n"
+                           f"{meta.get('sector','')}\n"
+                           f"{meta.get('note','')}"),
+            "color":       {"background": color, "border": border_color},
             "font":        {"color": "#111", "size": font_size, "bold": is_focal},
             "size":        38 if is_focal else 22,
             "shadow":      True,
@@ -118,11 +116,13 @@ def build_full_map_html(chain: dict, active_tiers: set[str] | None = None, heigh
         },
         "nodes": {
             "shape": "dot",
-            "font": {"color": "#111", "size": 12},
+            "font":   {"color": "#111", "size": 12},
+            "chosen": False,
         },
         "edges": {
             "color":          {"inherit": False},
             "selectionWidth": 3,
+            "chosen":         False,
         },
     }
 
@@ -318,8 +318,7 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
         return {
             "id":    ticker,
             "label": ticker,
-            "title": (f"<b>{ticker}</b> — {meta.get('name', ticker)}<br>"
-                      f"{meta.get('note','')}"),
+            "title": f"{ticker} — {meta.get('name', ticker)}\n{meta.get('note','')}",
             "x": x, "y": y,
             "color":       {"background": color, "border": "#222" if is_f else "#fff"},
             "font":        {"color": "#111", "size": 16 if is_f else 12, "bold": is_f},
@@ -391,11 +390,13 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
         },
         "nodes": {
             "shape": "dot",
-            "font": {"color": "#111", "size": 12},
+            "font":   {"color": "#111", "size": 12},
+            "chosen": False,
         },
         "edges": {
             "color":  {"inherit": False},
             "smooth": {"type": "curvedCW", "roundness": 0.12},
+            "chosen": False,
         },
         "layout": {"randomSeed": 42},
     }
