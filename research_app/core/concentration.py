@@ -30,7 +30,7 @@ KNOWN_SEGMENTS: dict[str, list[str]] = {
     "INTC": ["CCG", "DCG", "IOTG", "Mobileye", "PSG", "NEX", "Intel Foundry"],
     "QCOM": ["QCT", "QTL"],
     "AVGO": ["Semiconductor Solutions", "Infrastructure Software"],
-    "TSM":  ["Advanced", "Specialty Technology"],
+    "TSM":  ["Wafer", "Mask", "Others"],  # legacy; platform breakdown parsed separately if needed
 }
 
 
@@ -42,7 +42,7 @@ def _cik_padded(cik: str) -> str:
 
 @st.cache_data(ttl=3600 * 24, show_spinner=False)
 def _fetch_latest_10k_text(cik: str) -> str:
-    """Download the most recent 10-K filing text from SEC EDGAR."""
+    """Download the most recent annual filing text from SEC EDGAR (10-K or 20-F)."""
     cik_pad = _cik_padded(cik)
     url = f"https://data.sec.gov/submissions/CIK{cik_pad}.json"
     r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=20)
@@ -50,26 +50,26 @@ def _fetch_latest_10k_text(cik: str) -> str:
         return ""
     sub = r.json()
 
-    # Find the most recent 10-K accession number
     filings = sub.get("filings", {}).get("recent", {})
     forms   = filings.get("form", [])
     accns   = filings.get("accessionNumber", [])
     docs    = filings.get("primaryDocument", [])
     for form, accn, doc in zip(forms, accns, docs):
-        if form == "10-K":
-            accn_fmt = accn.replace("-", "")
-            cik_num  = cik.replace("CIK", "").lstrip("0")
-            doc_url  = (f"https://www.sec.gov/Archives/edgar/data/"
-                        f"{cik_num}/{accn_fmt}/{doc}")
-            try:
-                time.sleep(0.25)
-                resp = requests.get(doc_url, headers={"User-Agent": USER_AGENT},
-                                    timeout=30)
-                if resp.status_code == 200:
-                    return resp.text
-            except Exception:
-                pass
-            break
+        if form not in ("10-K", "20-F"):
+            continue
+        accn_fmt = accn.replace("-", "")
+        cik_num  = cik.replace("CIK", "").lstrip("0")
+        doc_url  = (f"https://www.sec.gov/Archives/edgar/data/"
+                    f"{cik_num}/{accn_fmt}/{doc}")
+        try:
+            time.sleep(0.25)
+            resp = requests.get(doc_url, headers={"User-Agent": USER_AGENT},
+                                timeout=30)
+            if resp.status_code == 200:
+                return resp.text
+        except Exception:
+            pass
+        break
     return ""
 
 

@@ -16,6 +16,7 @@ import pandas as pd
 
 from core.supply_chain import load_chain, TIER_LABELS, TIER_COLORS
 from core.concentration import get_concentration_data, KNOWN_SEGMENTS
+from core.filing_paths import local_annual_dirs
 
 st.set_page_config(page_title="业务集中度", page_icon="📊", layout="wide")
 
@@ -37,14 +38,10 @@ with st.sidebar:
     tier       = meta.get("tier", "")
     tier_color = TIER_COLORS.get(tier, "#0d6efd")
 
-    # Local 10-K directories — only used when the path exists on this machine
-    _base = Path(r"e:\Quant\Quant\Investment Research")
-    _candidates = {
-        "AMD":  _base / "AMD"  / "10Q_10K" / "amd"  / "10-K",
-        "NVDA": _base / "NVDA" / "10Q_10K" / "nvda" / "10-K",
-    }
-    LOCAL_10K_DIRS = {k: str(v) for k, v in _candidates.items() if v.exists()}
+    LOCAL_10K_DIRS = local_annual_dirs()
     local_dir = LOCAL_10K_DIRS.get(selected, "")
+    if local_dir:
+        st.caption(f"📁 本地年报: `{local_dir}`")
 
     st.divider()
     if selected not in KNOWN_SEGMENTS:

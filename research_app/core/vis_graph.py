@@ -193,11 +193,25 @@ network.on('hoverNode', function(p){{
   var nbSet = new Set(network.getConnectedNodes(id));
   nbSet.add(id);
 
-  // neighbour → relationship colour (from edge metadata)
+  // extend with equipment layer (ASML → TSM → NVDA)
+  var EQUIP = '#e8a838';
+  Array.from(nbSet).forEach(function(nid){{
+    network.getConnectedEdges(nid).forEach(function(eid){{
+      var e = edges.get(eid);
+      if(e && eMeta[eid] && eMeta[eid].color === EQUIP){{
+        ceSet.add(eid);
+        nbSet.add(e.from === nid ? e.to : e.from);
+      }}
+    }});
+  }});
+
   var nbColor = {{}};
   edges.get(Array.from(ceSet)).forEach(function(e){{
-    var nb = (e.from === id) ? e.to : e.from;
-    nbColor[nb] = eMeta[e.id].color;
+    [e.from, e.to].forEach(function(nid){{
+      if(nid !== id && nbSet.has(nid) && !nbColor[nid]){{
+        nbColor[nid] = eMeta[e.id].color;
+      }}
+    }});
   }});
 
   // node background + opacity
@@ -260,15 +274,24 @@ network.on('blurNode', function(){{
   }}));
 }});
 
-// ── Click: navigate parent to company detail ─────────────────────────────────
-network.on('click', function(p){{
-  if(p.nodes.length>0){{
-    var ticker = p.nodes[0];
-    try{{
-      window.parent.location.search = '?ticker=' + encodeURIComponent(ticker);
-    }}catch(e){{
-      console.warn('parent nav failed',e);
+// ── Click: navigate to company overview via top-level URL ────────────────────
+function goToTicker(ticker) {{
+  try {{
+    var u = new URL(window.top.location.href);
+    u.searchParams.set('ticker', ticker);
+    window.top.location.href = u.toString();
+  }} catch(e) {{
+    try {{
+      window.parent.location.href = '?ticker=' + encodeURIComponent(ticker);
+    }} catch(e2) {{
+      console.warn('nav failed', e2);
     }}
+  }}
+}}
+
+network.on('click', function(p){{
+  if(p.nodes.length > 0){{
+    goToTicker(p.nodes[0]);
   }}
 }});
 </script></body></html>"""
@@ -276,12 +299,13 @@ network.on('click', function(p){{
 
 # ── Mini Map ──────────────────────────────────────────────────────────────────
 
-def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> str:
+def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 400) -> str:
     """
     Compact LR mini-map for the company overview page.
     Layout (physics OFF, draggable):
-      x = -380  upstream suppliers
-      x =    0  focal company
+      x = -720  equipment layer (indirect upstream via foundry)
+      x = -380  direct upstream
+      x =     0  focal company
       x = +380  downstream customers
       y = +260  competitors (spread horizontally below focal)
     """
@@ -290,6 +314,7 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
     upstream_t:    list[str] = []
     downstream_t:  list[str] = []
     competitor_t:  list[str] = []
+    equipment_by_hub: dict[str, list[str]] = {}
 
     for rel in chain["relationships"]:
         rt  = rel.get("type", "")
@@ -305,8 +330,17 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
         elif frm == focal_ticker and to_ not in downstream_t:
             downstream_t.append(to_)
 
+    # Indirect upstream: equipment suppliers of direct upstream (e.g. ASML → TSM → NVDA)
+    for rel in chain["relationships"]:
+        if rel.get("type") == "supplies_equipment" and rel["to"] in upstream_t:
+            hub = rel["to"]
+            equip = rel["from"]
+            if equip not in equipment_by_hub.setdefault(hub, []):
+                equipment_by_hub[hub].append(equip)
+
     nodes_data: list[dict] = []
     edges_data: list[dict] = []
+    placed: set[str] = set()
 
     def _node(ticker: str, x: float, y: float, size: int = 22) -> dict:
         meta  = chain["companies"].get(ticker, {})
@@ -326,11 +360,15 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
 
     # Focal
     nodes_data.append(_node(focal_ticker, 0, 0, size=36))
+    placed.add(focal_ticker)
 
-    # Upstream (left column)
+    # Direct upstream (middle-left column)
     uy = _spread(len(upstream_t), spacing=95)
+    hub_y: dict[str, float] = {}
     for i, t in enumerate(upstream_t):
+        hub_y[t] = uy[i]
         nodes_data.append(_node(t, -380, uy[i]))
+        placed.add(t)
         rt_up = next(
             (r["type"] for r in chain["relationships"]
              if r["from"] == t and r["to"] == focal_ticker), "manufactures_for"
@@ -344,6 +382,24 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
             "smooth": {"type": "curvedCW", "roundness": 0.12},
             "title": RELATIONSHIP_LABELS.get(rt_up, rt_up),
         })
+
+    # Equipment layer (far-left column, grouped by hub)
+    for hub, eq_list in equipment_by_hub.items():
+        hy = hub_y.get(hub, 0)
+        eq_y = _spread(len(eq_list), spacing=65)
+        for j, eq in enumerate(eq_list):
+            if eq not in placed:
+                nodes_data.append(_node(eq, -720, hy + eq_y[j], size=18))
+                placed.add(eq)
+            edges_data.append({
+                "id":    f"{eq}___{hub}",
+                "from":  eq, "to": hub,
+                "color": {"color": EDGE_COLORS["supplies_equipment"], "inherit": False},
+                "width": 1.6,
+                "arrows": "to",
+                "smooth": {"type": "curvedCW", "roundness": 0.12},
+                "title": RELATIONSHIP_LABELS["supplies_equipment"],
+            })
 
     # Downstream (right column)
     dy = _spread(len(downstream_t), spacing=95)
@@ -412,6 +468,7 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
     j_nmeta = json.dumps(node_meta,   ensure_ascii=False)
 
     # Section label colours
+    equipment_c  = TIER_COLORS.get("upstream_t2", "#e8a838")
     upstream_c   = TIER_COLORS.get("upstream", "#fd7e14")
     downstream_c = TIER_COLORS.get("downstream", "#198754")
     competitor_c = TIER_COLORS.get("peer", "#dc3545")
@@ -424,17 +481,19 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
 body{{background:#fafafa;font-family:-apple-system,sans-serif;position:relative}}
 #mini{{width:100%;height:{height}px}}
 .lbl{{position:absolute;font-size:11px;font-weight:600;opacity:.65;pointer-events:none}}
-#lb-up  {{top:6px;left:10px;color:{upstream_c}}}
+#lb-eq  {{top:6px;left:4%;color:{equipment_c}}}
+#lb-up  {{top:6px;left:28%;color:{upstream_c}}}
 #lb-dn  {{top:6px;right:10px;color:{downstream_c}}}
 #lb-comp{{bottom:6px;left:50%;transform:translateX(-50%);color:{competitor_c}}}
 #lb-tip {{bottom:6px;right:10px;color:#888;font-weight:400;font-size:10px}}
 </style></head>
 <body>
 <div id="mini"></div>
-<div class="lbl" id="lb-up">↑ 上游供应商</div>
+<div class="lbl" id="lb-eq">↑ 设备层</div>
+<div class="lbl" id="lb-up">直接上游</div>
 <div class="lbl" id="lb-dn">下游客户 ↑</div>
 <div class="lbl" id="lb-comp">-- 竞争对手 --</div>
-<div class="lbl" id="lb-tip">可拖拽 · 滚轮缩放</div>
+<div class="lbl" id="lb-tip">点击跳转 · 可拖拽 · 滚轮缩放</div>
 <script>
 var ORIG  = {j_orig};
 var NMETA = {j_nmeta};
@@ -464,11 +523,25 @@ network.on('hoverNode', function(p){{
   var nbSet = new Set(network.getConnectedNodes(id));
   nbSet.add(id);
 
+  var EQUIP = '#e8a838';
+  Array.from(nbSet).forEach(function(nid){{
+    network.getConnectedEdges(nid).forEach(function(eid){{
+      var e = edges.get(eid);
+      if(e && eMeta[eid] && eMeta[eid].color === EQUIP){{
+        ceSet.add(eid);
+        nbSet.add(e.from === nid ? e.to : e.from);
+      }}
+    }});
+  }});
+
   var nbColor = {{}};
-  edges.get(ceArr).forEach(function(e){{
+  edges.get(Array.from(ceSet)).forEach(function(e){{
     var eid = e.id || (e.from+'___'+e.to);
-    var nb  = (e.from === id) ? e.to : e.from;
-    nbColor[nb] = (eMeta[eid] && eMeta[eid].color) || ORIG[nb];
+    [e.from, e.to].forEach(function(nid){{
+      if(nid !== id && nbSet.has(nid) && !nbColor[nid]){{
+        nbColor[nid] = (eMeta[eid] && eMeta[eid].color) || ORIG[nid];
+      }}
+    }});
   }});
 
   nodes.update(nodes.get().map(function(n){{
@@ -534,6 +607,24 @@ network.on('blurNode', function(){{
     return {{id:e.id,color:{{color:(eMeta[eid]&&eMeta[eid].color)||'#aaa',inherit:false,opacity:1}},
             width:(eMeta[eid]&&eMeta[eid].width)||2.0}};
   }}));
+}});
+
+function goToTicker(ticker) {{
+  try {{
+    var u = new URL(window.top.location.href);
+    u.searchParams.set('ticker', ticker);
+    window.top.location.href = u.toString();
+  }} catch(e) {{
+    try {{
+      window.parent.location.href = '?ticker=' + encodeURIComponent(ticker);
+    }} catch(e2) {{}}
+  }}
+}}
+
+network.on('click', function(p){{
+  if(p.nodes.length > 0){{
+    goToTicker(p.nodes[0]);
+  }}
 }});
 
 network.fit({{animation:{{duration:400,easingFunction:'easeInOutQuad'}}}});

@@ -8,6 +8,7 @@ import pandas as pd
 import plotly.express as px
 
 from core.text_mining import mine_all_filings, summarise
+from core.filing_paths import local_annual_dirs
 from core.supply_chain import (
     load_chain, save_chain, add_company, add_relationship,
     TIER_LABELS, TIER_COLORS,
@@ -20,7 +21,7 @@ with st.sidebar:
     st.markdown("## 📄 10-K 文本挖掘")
     st.divider()
     st.markdown("""
-从本地已下载的 SEC 10-K 文件中自动提取：
+从本地已下载的 SEC 年报文件中自动提取（10-K / 20-F）：
 - 代工厂 / 制造商
 - 封装商
 - 主要客户（≥10% 营收）
@@ -31,19 +32,25 @@ with st.sidebar:
 """)
 
 # ── Path config ───────────────────────────────────────────────────────────────
-DEFAULT_DIR = Path(r"e:\Quant\Quant\Investment Research\AMD\10Q_10K\amd\10-K")
+_LOCAL = local_annual_dirs()
+_DEFAULT_TICKER = "AMD" if "AMD" in _LOCAL else (next(iter(_LOCAL)) if _LOCAL else "AMD")
+DEFAULT_DIR = Path(_LOCAL.get(_DEFAULT_TICKER, r"e:\Quant\Quant\Investment Research\AMD\10Q_10K\amd\10-K"))
 
-st.title("📄 10-K 文本挖掘 — 自动提取供应链关系")
-st.caption("从 SEC 原始文件中提取公司名称，按出现频次排序，可直接加入供应链地图。")
+st.title("📄 SEC 文本挖掘 — 自动提取供应链关系")
+st.caption("从 SEC 原始文件（10-K / 20-F）中提取公司名称，按出现频次排序，可直接加入供应链地图。")
 st.divider()
 
 # ── Directory selector ────────────────────────────────────────────────────────
-col_path, col_btn = st.columns([4, 1])
+_pick_col, col_path, col_btn = st.columns([1, 3, 1])
+with _pick_col:
+    _tickers = sorted(_LOCAL.keys()) or [_DEFAULT_TICKER]
+    _sel = st.selectbox("公司", _tickers, index=_tickers.index(_DEFAULT_TICKER) if _DEFAULT_TICKER in _tickers else 0)
+    _auto_dir = _LOCAL.get(_sel, str(DEFAULT_DIR))
 with col_path:
     filing_dir = st.text_input(
-        "10-K 文件目录",
-        value=str(DEFAULT_DIR),
-        help="包含 *.txt SEC 文件的文件夹路径",
+        "年报文件目录",
+        value=_auto_dir,
+        help="包含 *.txt SEC 文件的文件夹（10-K 或 20-F）",
     )
 with col_btn:
     st.write("")

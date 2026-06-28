@@ -1,9 +1,13 @@
-"""Generic SEC filing workflow — download 10-Q and 10-K for any ticker.
+"""Generic SEC filing workflow — download filings for any ticker.
+
+US issuers (AMD, NVDA):  10-Q + 10-K
+Foreign issuers (TSM):   6-K + 20-F  (ADR / FPI)
 
 Usage:
     python sec_workflow.py NVDA
-    python sec_workflow.py AMD
-    python sec_workflow.py TSMC
+    python sec_workflow.py TSM
+    python sec_workflow.py AMD NVDA TSM
+    python sec_workflow.py TSM --no-interim   # skip 6-K (700+ files)
 """
 
 from __future__ import annotations
@@ -18,20 +22,36 @@ from secedgar import FilingType, filings
 USER_AGENT = "sunjialin sunjialin@terraquant.cn"
 BASE_DIR = Path(__file__).resolve().parent
 
+# Foreign private issuers file 20-F / 6-K instead of 10-K / 10-Q
+FOREIGN_TICKERS = {"TSM"}
+
+FILING_SETS: dict[str, tuple] = {
+    "us":      (FilingType.FILING_10Q, FilingType.FILING_10K),
+    "foreign": (FilingType.FILING_6K, FilingType.FILING_20F),
+}
+
+
+def _profile(ticker: str) -> str:
+    return "foreign" if ticker.upper() in FOREIGN_TICKERS else "us"
+
 
 def _company_dir(ticker: str) -> Path:
     return BASE_DIR / ticker.upper()
 
 
-def download_filings(ticker: str) -> None:
-    """Download all 10-Q and 10-K filings from SEC EDGAR."""
+def download_filings(ticker: str, *, include_interim: bool = True) -> None:
+    """Download SEC filings from EDGAR."""
     import nest_asyncio
     nest_asyncio.apply()
 
     filings_dir = _company_dir(ticker) / "10Q_10K"
     filings_dir.mkdir(parents=True, exist_ok=True)
 
-    for filing_type in (FilingType.FILING_10Q, FilingType.FILING_10K):
+    types = list(FILING_SETS[_profile(ticker)])
+    if not include_interim:
+        types = [types[-1]]  # annual only (10-K or 20-F)
+
+    for filing_type in types:
         batch = filings(
             cik_lookup=ticker.lower(),
             filing_type=filing_type,
@@ -61,16 +81,16 @@ def _parse_header(path: Path, ticker: str) -> dict:
 
 
 def build_filing_index(ticker: str) -> pd.DataFrame:
-    """Scan local filings and write filing_index.csv."""
-    filings_dir = _company_dir(ticker) / "10Q_10K"
+    """Scan all downloaded form folders and write filing_index.csv."""
+    filings_dir = _company_dir(ticker) / "10Q_10K" / ticker.lower()
     rows: list[dict] = []
 
-    for form_dir in ("10-Q", "10-K"):
-        folder = filings_dir / ticker.lower() / form_dir
-        if not folder.exists():
-            continue
-        for path in sorted(folder.glob("*.txt")):
-            rows.append(_parse_header(path, ticker))
+    if filings_dir.exists():
+        for form_dir in sorted(filings_dir.iterdir()):
+            if not form_dir.is_dir():
+                continue
+            for path in sorted(form_dir.glob("*.txt")):
+                rows.append(_parse_header(path, ticker))
 
     index = (pd.DataFrame(rows)
                .sort_values(["form", "period_end"])
@@ -78,12 +98,16 @@ def build_filing_index(ticker: str) -> pd.DataFrame:
 
     out = _company_dir(ticker) / "filing_index.csv"
     index.to_csv(out, index=False)
-    print(f"[{ticker}] Index saved: {out}")
+    print(f"[{ticker}] Index saved: {out} ({len(index)} files)")
     return index
 
 
 def summarize(ticker: str, index: pd.DataFrame) -> None:
-    for form in ("10-Q", "10-K"):
+    profile = _profile(ticker)
+    annual  = "20-F" if profile == "foreign" else "10-K"
+    interim = "6-K"  if profile == "foreign" else "10-Q"
+
+    for form in (interim, annual):
         subset = index[index["form"] == form]
         if subset.empty:
             print(f"[{ticker}] {form}: 0 files")
@@ -94,18 +118,22 @@ def summarize(ticker: str, index: pd.DataFrame) -> None:
               f"(filed {latest['filed_date'].date()})")
 
 
-def run(ticker: str) -> None:
-    print(f"\n=== {ticker.upper()} SEC Workflow ===")
-    download_filings(ticker)
+def run(ticker: str, *, include_interim: bool = True) -> None:
+    print(f"\n=== {ticker.upper()} SEC Workflow ({_profile(ticker)}) ===")
+    download_filings(ticker, include_interim=include_interim)
     index = build_filing_index(ticker)
     summarize(ticker, index)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python sec_workflow.py <TICKER> [TICKER2 ...]")
-        print("Example: python sec_workflow.py AMD NVDA TSMC")
+    args = [a for a in sys.argv[1:] if not a.startswith("-")]
+    include_interim = "--no-interim" not in sys.argv
+
+    if not args:
+        print("Usage: python sec_workflow.py <TICKER> [TICKER2 ...] [--no-interim]")
+        print("Example: python sec_workflow.py AMD NVDA TSM")
+        print("         python sec_workflow.py TSM --no-interim   # 20-F only")
         sys.exit(1)
 
-    for t in sys.argv[1:]:
-        run(t)
+    for t in args:
+        run(t, include_interim=include_interim)

@@ -20,20 +20,6 @@ from core.vis_graph import build_full_map_html
 
 st.set_page_config(page_title="供应链地图", page_icon="🕸️", layout="wide")
 
-# ── Detect click-navigation from Vis.js ───────────────────────────────────────
-# Vis.js click sets window.parent.location.search = '?ticker=XXX'
-# Streamlit reruns and we detect it here.
-ticker_click = st.query_params.get("ticker", "")
-if ticker_click:
-    if "chain" not in st.session_state:
-        st.session_state.chain = load_chain()
-    if ticker_click in st.session_state.chain["companies"]:
-        st.session_state["overview_ticker"] = ticker_click
-        st.query_params.clear()
-        st.switch_page("pages/1_公司概览.py")
-    else:
-        st.query_params.clear()
-
 # ── Load chain ────────────────────────────────────────────────────────────────
 if "chain" not in st.session_state:
     st.session_state.chain = load_chain()
