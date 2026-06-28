@@ -33,9 +33,15 @@ def _default_index() -> int:
         return tickers.index(_preselect)
     return tickers.index("AMD") if "AMD" in tickers else 0
 
+SELECT_KEY = "overview_company"
+if _preselect and _preselect in tickers:
+    st.session_state[SELECT_KEY] = _preselect
+elif SELECT_KEY not in st.session_state:
+    st.session_state[SELECT_KEY] = tickers[_default_index()]
+
 with st.sidebar:
     st.markdown("## 🔍 公司概览")
-    selected = st.selectbox("选择公司", tickers, index=_default_index())
+    selected = st.selectbox("选择公司", tickers, key=SELECT_KEY)
     meta = chain["companies"][selected]
     tier = meta["tier"]
     st.divider()
@@ -229,9 +235,13 @@ st.divider()
 st.subheader("供应链关系图")
 st.caption("左：上游供应商 · 右：下游客户 · 下方：竞争对手 · 可拖拽 · 滚轮缩放")
 
-from core.vis_graph import build_mini_map_html
-mini_html = build_mini_map_html(selected, chain, height=370)
-st.components.v1.html(mini_html, height=385, scrolling=False)
+from core.vis_graph import build_mini_map_payload
+from components.vis_map import render_vis_map
+from core.nav import handle_map_click, map_component_key
+
+mini_payload = build_mini_map_payload(selected, chain, height=370)
+clicked = render_vis_map(mini_payload, height=370, key=map_component_key(f"mini_{selected}"))
+handle_map_click(clicked, prefix=f"mini_{selected}", skip=selected)
 
 # ── Supply chain neighbors (text fallback) ────────────────────────────────────
 from core.supply_chain import get_neighbors

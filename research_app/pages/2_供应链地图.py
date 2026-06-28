@@ -1,8 +1,8 @@
 """Page 2 — 供应链地图 (Supply Chain Map)
-Uses Vis.js (via st.components.v1.html) for:
+Uses Vis.js custom component for:
   • Physics spring layout
   • Hover → highlight neighbourhood, dim others
-  • Click → navigate to company overview (via window.parent query-param)
+  • Click → navigate to company overview via Streamlit session state
 """
 import sys
 from pathlib import Path
@@ -16,7 +16,9 @@ from core.supply_chain import (
     add_company, add_relationship, remove_company,
     TIER_COLORS, TIER_LABELS, RELATIONSHIP_LABELS,
 )
-from core.vis_graph import build_full_map_html
+from core.vis_graph import build_full_map_payload
+from components.vis_map import render_vis_map
+from core.nav import handle_map_click, map_component_key
 
 st.set_page_config(page_title="供应链地图", page_icon="🕸️", layout="wide")
 
@@ -97,8 +99,9 @@ st.caption("**悬停**节点 → 高亮上下游关系 · **点击**节点 → �
 
 # ── Build + render Vis.js map ─────────────────────────────────────────────────
 active_tiers = {k for k, v in show_tiers.items() if v}
-html = build_full_map_html(chain, active_tiers=active_tiers, height=620)
-st.components.v1.html(html, height=634, scrolling=False)
+payload = build_full_map_payload(chain, active_tiers=active_tiers, height=620)
+clicked = render_vis_map(payload, height=620, key=map_component_key("supply"))
+handle_map_click(clicked, prefix="supply")
 
 # ── Legend ────────────────────────────────────────────────────────────────────
 tier_cols = st.columns(len(TIER_LABELS) + 1)

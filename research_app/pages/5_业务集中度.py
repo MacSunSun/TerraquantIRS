@@ -188,11 +188,12 @@ if conc:
     st.markdown("---")
     st.markdown("**供应链伙伴关系图**")
     st.caption("左：上游供应商 · 右：下游客户 · 下方：竞争对手 · 可拖拽 · 滚轮缩放")
-    from core.vis_graph import build_mini_map_html
-    st.components.v1.html(
-        build_mini_map_html(selected, chain, height=340),
-        height=355, scrolling=False,
-    )
+    from core.vis_graph import build_mini_map_payload
+    from components.vis_map import render_vis_map
+    from core.nav import handle_map_click, map_component_key
+    mini_payload = build_mini_map_payload(selected, chain, height=340)
+    clicked = render_vis_map(mini_payload, height=340, key=map_component_key(f"conc_{selected}"))
+    handle_map_click(clicked, prefix=f"conc_{selected}", skip=selected)
 else:
     st.info("未从 10-K 文本中提取到客户/供应商集中度信息。")
 

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="./streamlit-component-lib.js"></script>
+  <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #f8f9fa; font-family: -apple-system, sans-serif; position: relative; }
+    #net { width: 100%; }
+    .lbl {
+      position: absolute; font-size: 11px; font-weight: 600;
+      opacity: 0.65; pointer-events: none;
+    }
+    #tip {
+      position: absolute; bottom: 10px; right: 14px;
+      background: rgba(0,0,0,.52); color: #fff; padding: 3px 10px;
+      border-radius: 4px; font-size: 11px; pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="labels"></div>
+  <div id="net"></div>
+  <div id="tip"></div>
+  <script>
+    let network = null;
+    let nodes = null;
+    let edges = null;
+    let ORIG = {};
+    let NMETA = {};
+    let eMeta = {};
+    let mode = "full";
+    let focal = "";
+
+    function buildEMeta(edgesArr) {
+      eMeta = {};
+      edgesArr.forEach(function(e) {
+        eMeta[e.id] = {
+          color: (e.color && e.color.color) ? e.color.color : "#aaa",
+          width: e.width || 1.8
+        };
+      });
+    }
+
+    function resetFontColors() {
+      nodes.getIds().forEach(function(nid) {
+        var bn = network.body.nodes[nid];
+        if (!bn) return;
+        bn.setOptions({ font: { color: "#111", size: NMETA[nid].fontSize, bold: false } });
+      });
+      network.redraw();
+    }
+
+    function extendEquipment(nbSet, ceSet) {
+      var EQUIP = "#e8a838";
+      Array.from(nbSet).forEach(function(nid) {
+        network.getConnectedEdges(nid).forEach(function(eid) {
+          var e = edges.get(eid);
+          if (e && eMeta[eid] && eMeta[eid].color === EQUIP) {
+            ceSet.add(eid);
+            nbSet.add(e.from === nid ? e.to : e.from);
+          }
+        });
+      });
+    }
+
+    function bindHover() {
+      network.on("hoverNode", function(p) {
+        var id = p.node;
+        var ceSet = new Set(network.getConnectedEdges(id));
+        var nbSet = new Set(network.getConnectedNodes(id));
+        nbSet.add(id);
+        extendEquipment(nbSet, ceSet);
+
+        var nbColor = {};
+        edges.get(Array.from(ceSet)).forEach(function(e) {
+          [e.from, e.to].forEach(function(nid) {
+            if (nid !== id && nbSet.has(nid) && !nbColor[nid]) {
+              nbColor[nid] = eMeta[e.id].color;
+            }
+          });
+        });
+
+        nodes.update(nodes.get().map(function(n) {
+          if (n.id === id) {
+            return { id: n.id, color: { background: "#0d6efd", border: "#0a58ca" }, opacity: 1 };
+          } else if (nbSet.has(n.id)) {
+            var c = nbColor[n.id] || ORIG[n.id];
+            return { id: n.id, color: { background: c, border: c }, opacity: 1 };
+          }
+          return { id: n.id, color: { background: "#e0e0ea", border: "#ccc" }, opacity: mode === "mini" ? 0.2 : 0.18 };
+        }));
+
+        nodes.getIds().forEach(function(nid) {
+          var bn = network.body.nodes[nid];
+          if (!bn) return;
+          if (nid === id) {
+            bn.setOptions({ font: { color: "#0d6efd", size: NMETA[nid].fontSize + 2, bold: true } });
+          } else if (nbSet.has(nid)) {
+            var c = nbColor[nid] || ORIG[nid];
+            bn.setOptions({ font: { color: c, size: NMETA[nid].fontSize + 1, bold: true } });
+          } else {
+            bn.setOptions({ font: { color: "#ccc", size: 10, bold: false } });
+          }
+        });
+        network.redraw();
+
+        setTimeout(function() {
+          edges.update(edges.get().map(function(e) {
+            if (ceSet.has(e.id)) {
+              return { id: e.id, color: { color: eMeta[e.id].color, inherit: false, opacity: 1 }, width: 3.0 };
+            }
+            return { id: e.id, color: { color: "#e0e0ea", inherit: false, opacity: 0.1 }, width: 0.5 };
+          }));
+        }, 30);
+      });
+
+      network.on("blurNode", function() {
+        nodes.update(nodes.get().map(function(n) {
+          var border = (mode === "mini" && n.id === focal) ? "#222" : (NMETA[n.id] ? NMETA[n.id].borderColor : "#fff");
+          if (mode === "mini" && n.id !== focal) border = "#fff";
+          return {
+            id: n.id,
+            color: { background: ORIG[n.id], border: border },
+            opacity: 1
+          };
+        }));
+        resetFontColors();
+        edges.update(edges.get().map(function(e) {
+          return { id: e.id, color: { color: eMeta[e.id].color, inherit: false, opacity: 1 }, width: eMeta[e.id].width };
+        }));
+      });
+    }
+
+    function bindClick() {
+      network.on("click", function(p) {
+        if (p.nodes.length > 0) {
+          Streamlit.setComponentValue(p.nodes[0]);
+        }
+      });
+    }
+
+    function renderLabels(labels) {
+      var box = document.getElementById("labels");
+      box.innerHTML = "";
+      if (!labels || !labels.length) return;
+      labels.forEach(function(lb) {
+        var el = document.createElement("div");
+        el.className = "lbl";
+        el.textContent = lb.text;
+        el.style.color = lb.color || "#666";
+        if (lb.top) el.style.top = lb.top;
+        if (lb.bottom) el.style.bottom = lb.bottom;
+        if (lb.left) el.style.left = lb.left;
+        if (lb.right) el.style.right = lb.right;
+        if (lb.transform) el.style.transform = lb.transform;
+        box.appendChild(el);
+      });
+    }
+
+    function renderGraph(args) {
+      mode = args.mode || "full";
+      focal = args.focal || "";
+      var height = args.height || 620;
+      document.getElementById("net").style.height = height + "px";
+      document.body.style.background = mode === "mini" ? "#fafafa" : "#f8f9fa";
+
+      ORIG = args.orig || {};
+      NMETA = args.nmeta || {};
+      buildEMeta(args.edges || []);
+
+      nodes = new vis.DataSet(args.nodes || []);
+      edges = new vis.DataSet(args.edges || []);
+      network = new vis.Network(
+        document.getElementById("net"),
+        { nodes: nodes, edges: edges },
+        args.options || {}
+      );
+
+      bindHover();
+      bindClick();
+
+      var tip = document.getElementById("tip");
+      if (mode === "mini") {
+        tip.textContent = "";
+        tip.style.display = "none";
+        renderLabels(args.labels || []);
+        network.fit({ animation: { duration: 400, easingFunction: "easeInOutQuad" } });
+      } else {
+        tip.textContent = "悬停高亮邻居 · 点击进入公司详情 · 滚轮缩放";
+        tip.style.display = "block";
+        renderLabels([]);
+      }
+
+      Streamlit.setFrameHeight(height + (mode === "full" ? 8 : 0));
+    }
+
+    Streamlit.events.addEventListener(Streamlit.RENDER_EVENT, function(event) {
+      var args = event.detail.args || {};
+      var pl = args.payload || {};
+      if (args.height) pl.height = args.height;
+      renderGraph(pl);
+    });
+    Streamlit.setComponentReady();
+  </script>
+</body>
+</html>
