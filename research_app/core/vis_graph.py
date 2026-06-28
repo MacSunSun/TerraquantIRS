@@ -242,9 +242,9 @@ network.on('hoverNode', function(p){{
   // edge highlight
   edges.update(edges.get().map(function(e){{
     if(ceSet.has(e.id)){{
-      return {{id:e.id,color:{{color:eMeta[e.id].color,opacity:1}},width:3.0}};
+      return {{id:e.id,color:{{color:eMeta[e.id].color,inherit:false,opacity:1}},width:3.0}};
     }}else{{
-      return {{id:e.id,color:{{color:'#e0e0ea',opacity:0.1}},width:0.5}};
+      return {{id:e.id,color:{{color:'#e0e0ea',inherit:false,opacity:0.1}},width:0.5}};
     }}
   }}));
 }});
@@ -258,7 +258,7 @@ network.on('blurNode', function(){{
   }}));
   resetFontColors();
   edges.update(edges.get().map(function(e){{
-    return {{id:e.id,color:{{color:eMeta[e.id].color,opacity:1}},width:eMeta[e.id].width}};
+    return {{id:e.id,color:{{color:eMeta[e.id].color,inherit:false,opacity:1}},width:eMeta[e.id].width}};
   }}));
 }});
 
@@ -509,9 +509,9 @@ network.on('hoverNode', function(p){{
   edges.update(edges.get().map(function(e){{
     var eid = e.id || (e.from+'___'+e.to);
     if(ceSet.has(e.id)){{
-      return {{id:e.id,color:{{color:(eMeta[eid]&&eMeta[eid].color)||'#aaa',opacity:1}},width:3.0}};
+      return {{id:e.id,color:{{color:(eMeta[eid]&&eMeta[eid].color)||'#aaa',inherit:false,opacity:1}},width:3.0}};
     }}else{{
-      return {{id:e.id,color:{{color:'#e0e0ea',opacity:0.1}},width:0.5}};
+      return {{id:e.id,color:{{color:'#e0e0ea',inherit:false,opacity:0.1}},width:0.5}};
     }}
   }}));
 }});
@@ -531,7 +531,7 @@ network.on('blurNode', function(){{
   network.redraw();
   edges.update(edges.get().map(function(e){{
     var eid = e.id || (e.from+'___'+e.to);
-    return {{id:e.id,color:{{color:(eMeta[eid]&&eMeta[eid].color)||'#aaa',opacity:1}},
+    return {{id:e.id,color:{{color:(eMeta[eid]&&eMeta[eid].color)||'#aaa',inherit:false,opacity:1}},
             width:(eMeta[eid]&&eMeta[eid].width)||2.0}};
   }}));
 }});
