@@ -190,35 +190,61 @@ function resetFontColors(){{
   network.redraw();
 }}
 
-// ── Hover: highlight neighbourhood ──────────────────────────────────────────
+// ── Hover: hovered node → blue; neighbours → relationship colour ─────────────
 network.on('hoverNode', function(p){{
   var id    = p.node;
+  var ceSet = new Set(network.getConnectedEdges(id));
   var nbSet = new Set(network.getConnectedNodes(id));
   nbSet.add(id);
-  var ceSet = new Set(network.getConnectedEdges(id));
 
-  // node color + opacity via DataSet
+  // neighbour → relationship colour (from edge metadata)
+  var nbColor = {{}};
+  edges.get(Array.from(ceSet)).forEach(function(e){{
+    var nb = (e.from === id) ? e.to : e.from;
+    nbColor[nb] = eMeta[e.id].color;
+  }});
+
+  // node background + opacity
   nodes.update(nodes.get().map(function(n){{
-    if(nbSet.has(n.id)){{
+    if(n.id === id){{
       return {{id:n.id,
-              color:{{background:ORIG[n.id],border:'#111',hover:{{background:ORIG[n.id],border:'#000'}}}},
+              color:{{background:'#0d6efd',border:'#0a58ca',
+                     hover:{{background:'#0d6efd',border:'#0a58ca'}}}},
+              opacity:1}};
+    }}else if(nbSet.has(n.id)){{
+      var c = nbColor[n.id] || ORIG[n.id];
+      return {{id:n.id,
+              color:{{background:c,border:c,hover:{{background:c,border:c}}}},
               opacity:1}};
     }}else{{
       return {{id:n.id,
-              color:{{background:'#d8d8e0',border:'#bbb',hover:{{background:'#d8d8e0',border:'#bbb'}}}},
-              opacity:0.25}};
+              color:{{background:'#e0e0ea',border:'#ccc',
+                     hover:{{background:'#e0e0ea',border:'#ccc'}}}},
+              opacity:0.18}};
     }}
   }}));
 
-  // font color via direct body-node access
-  setFontColors(nbSet);
+  // font colour (direct body-node access for reliability)
+  nodes.getIds().forEach(function(nid){{
+    var bn = network.body.nodes[nid];
+    if(!bn) return;
+    if(nid === id){{
+      bn.setOptions({{font:{{color:'#0d6efd',size:NMETA[nid].fontSize+2,bold:true}}}});
+    }}else if(nbSet.has(nid)){{
+      var c = nbColor[nid] || ORIG[nid];
+      bn.setOptions({{font:{{color:c,size:NMETA[nid].fontSize+1,bold:true}}}});
+    }}else{{
+      bn.setOptions({{font:{{color:'#ccc',size:10,bold:false}}}});
+    }}
+  }});
+  network.redraw();
 
   // edge highlight
   edges.update(edges.get().map(function(e){{
     if(ceSet.has(e.id)){{
-      return {{id:e.id,color:{{color:eMeta[e.id].color,opacity:1}},width:2.8}};
+      return {{id:e.id,color:{{color:eMeta[e.id].color,opacity:1}},width:3.0}};
     }}else{{
-      return {{id:e.id,color:{{color:'#ddd',opacity:0.12}},width:0.5}};
+      return {{id:e.id,color:{{color:'#e0e0ea',opacity:0.1}},width:0.5}};
     }}
   }}));
 }});
@@ -315,7 +341,8 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
         )
         ec = EDGE_COLORS.get(rt_up, "#fd7e14")
         edges_data.append({
-            "from": t, "to": focal_ticker,
+            "id":    f"{t}___{focal_ticker}",
+            "from":  t, "to": focal_ticker,
             "color": {"color": ec, "inherit": False}, "width": 2.0,
             "arrows": "to",
             "smooth": {"type": "curvedCW", "roundness": 0.12},
@@ -332,7 +359,8 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
         )
         ec = EDGE_COLORS.get(rt_dn, "#198754")
         edges_data.append({
-            "from": focal_ticker, "to": t,
+            "id":    f"{focal_ticker}___{t}",
+            "from":  focal_ticker, "to": t,
             "color": {"color": ec, "inherit": False}, "width": 2.0,
             "arrows": "to",
             "smooth": {"type": "curvedCW", "roundness": 0.12},
@@ -344,7 +372,8 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
     for i, t in enumerate(competitor_t):
         nodes_data.append(_node(t, cx[i] if cx else 0, 270))
         edges_data.append({
-            "from": focal_ticker, "to": t,
+            "id":    f"{focal_ticker}___{t}___peer",
+            "from":  focal_ticker, "to": t,
             "color": {"color": "#dc3545", "inherit": False}, "width": 1.5,
             "dashes": True, "arrows": "",
             "smooth": {"type": "dynamic"},
@@ -375,6 +404,15 @@ def build_mini_map_html(focal_ticker: str, chain: dict, height: int = 360) -> st
     j_edges = json.dumps(edges_data, ensure_ascii=False)
     j_opts  = json.dumps(options,    ensure_ascii=False)
 
+    # orig colors & meta for JS hover logic
+    orig_colors: dict[str, str] = {}
+    node_meta:   dict[str, dict] = {}
+    for n in nodes_data:
+        orig_colors[n["id"]] = n["color"]["background"]
+        node_meta[n["id"]]   = {"fontSize": n["font"]["size"]}
+    j_orig  = json.dumps(orig_colors, ensure_ascii=False)
+    j_nmeta = json.dumps(node_meta,   ensure_ascii=False)
+
     # Section label colours
     upstream_c   = TIER_COLORS.get("upstream", "#fd7e14")
     downstream_c = TIER_COLORS.get("downstream", "#198754")
@@ -400,12 +438,103 @@ body{{background:#fafafa;font-family:-apple-system,sans-serif;position:relative}
 <div class="lbl" id="lb-comp">-- 竞争对手 --</div>
 <div class="lbl" id="lb-tip">可拖拽 · 滚轮缩放</div>
 <script>
-var nodes   = new vis.DataSet({j_nodes});
-var edges   = new vis.DataSet({j_edges});
+var ORIG  = {j_orig};
+var NMETA = {j_nmeta};
+var nodesArr = {j_nodes};
+var edgesArr = {j_edges};
+
+var eMeta = {{}};
+edgesArr.forEach(function(e){{
+  eMeta[e.id || (e.from+'___'+e.to)] = {{
+    color: (e.color && e.color.color) ? e.color.color : '#aaa',
+    width: e.width || 2.0
+  }};
+}});
+
+var nodes   = new vis.DataSet(nodesArr);
+var edges   = new vis.DataSet(edgesArr);
 var network = new vis.Network(
   document.getElementById('mini'),
   {{nodes:nodes, edges:edges}},
   {j_opts}
 );
+
+network.on('hoverNode', function(p){{
+  var id    = p.node;
+  var ceArr = network.getConnectedEdges(id);
+  var ceSet = new Set(ceArr);
+  var nbSet = new Set(network.getConnectedNodes(id));
+  nbSet.add(id);
+
+  var nbColor = {{}};
+  edges.get(ceArr).forEach(function(e){{
+    var eid = e.id || (e.from+'___'+e.to);
+    var nb  = (e.from === id) ? e.to : e.from;
+    nbColor[nb] = (eMeta[eid] && eMeta[eid].color) || ORIG[nb];
+  }});
+
+  nodes.update(nodes.get().map(function(n){{
+    if(n.id === id){{
+      return {{id:n.id,
+              color:{{background:'#0d6efd',border:'#0a58ca',
+                     hover:{{background:'#0d6efd',border:'#0a58ca'}}}},
+              opacity:1}};
+    }}else if(nbSet.has(n.id)){{
+      var c = nbColor[n.id] || ORIG[n.id];
+      return {{id:n.id,
+              color:{{background:c,border:c,hover:{{background:c,border:c}}}},
+              opacity:1}};
+    }}else{{
+      return {{id:n.id,
+              color:{{background:'#e0e0ea',border:'#ccc',
+                     hover:{{background:'#e0e0ea',border:'#ccc'}}}},
+              opacity:0.2}};
+    }}
+  }}));
+
+  nodes.getIds().forEach(function(nid){{
+    var bn = network.body.nodes[nid];
+    if(!bn) return;
+    if(nid === id){{
+      bn.setOptions({{font:{{color:'#0d6efd',size:(NMETA[nid]&&NMETA[nid].fontSize||12)+2,bold:true}}}});
+    }}else if(nbSet.has(nid)){{
+      var c = nbColor[nid] || ORIG[nid];
+      bn.setOptions({{font:{{color:c,size:(NMETA[nid]&&NMETA[nid].fontSize||12)+1,bold:true}}}});
+    }}else{{
+      bn.setOptions({{font:{{color:'#ccc',size:10,bold:false}}}});
+    }}
+  }});
+  network.redraw();
+
+  edges.update(edges.get().map(function(e){{
+    var eid = e.id || (e.from+'___'+e.to);
+    if(ceSet.has(e.id)){{
+      return {{id:e.id,color:{{color:(eMeta[eid]&&eMeta[eid].color)||'#aaa',opacity:1}},width:3.0}};
+    }}else{{
+      return {{id:e.id,color:{{color:'#e0e0ea',opacity:0.1}},width:0.5}};
+    }}
+  }}));
+}});
+
+network.on('blurNode', function(){{
+  nodes.update(nodes.get().map(function(n){{
+    return {{id:n.id,
+            color:{{background:ORIG[n.id],border: n.id==='{focal_ticker}' ? '#222':'#fff',
+                   hover:{{background:ORIG[n.id],border:'#000'}}}},
+            opacity:1}};
+  }}));
+  nodes.getIds().forEach(function(nid){{
+    var bn = network.body.nodes[nid];
+    if(!bn) return;
+    bn.setOptions({{font:{{color:'#111',size:NMETA[nid]&&NMETA[nid].fontSize||12,bold:false}}}});
+  }});
+  network.redraw();
+  edges.update(edges.get().map(function(e){{
+    var eid = e.id || (e.from+'___'+e.to);
+    return {{id:e.id,color:{{color:(eMeta[eid]&&eMeta[eid].color)||'#aaa',opacity:1}},
+            width:(eMeta[eid]&&eMeta[eid].width)||2.0}};
+  }}));
+}});
+
 network.fit({{animation:{{duration:400,easingFunction:'easeInOutQuad'}}}});
 </script></body></html>"""

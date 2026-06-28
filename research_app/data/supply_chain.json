@@ -36,7 +36,17 @@
     { "from": "AMD",  "to": "HPE",  "type": "sells_to",            "note": "EPYC CPUs for ProLiant servers" },
     { "from": "AMD",  "to": "NVDA", "type": "competes_with",       "note": "GPU competition — data center, AI, gaming" },
     { "from": "AMD",  "to": "INTC", "type": "competes_with",       "note": "CPU & server-chip competition" },
-    { "from": "AMD",  "to": "QCOM", "type": "competes_with",       "note": "ARM laptop / edge competition" }
+    { "from": "AMD",  "to": "QCOM", "type": "competes_with",       "note": "ARM laptop / edge competition" },
+    { "from": "NVDA", "to": "AMD",  "type": "competes_with",       "note": "GPU & AI accelerator competition" },
+    { "from": "TSM",  "to": "NVDA", "type": "manufactures_for",    "note": "Hopper / Blackwell chips on N4 / N3 / CoWoS" },
+    { "from": "MU",   "to": "NVDA", "type": "supplies_component",  "note": "HBM3E memory for H200 / B200 GPUs" },
+    { "from": "AMKR", "to": "NVDA", "type": "packages_for",        "note": "Advanced packaging for NVIDIA GPUs" },
+    { "from": "NVDA", "to": "MSFT", "type": "sells_to",            "note": "H100 / H200 / B200 GPUs for Azure AI" },
+    { "from": "NVDA", "to": "META", "type": "sells_to",            "note": "H100 / H200 GPU clusters for LLM training" },
+    { "from": "NVDA", "to": "AMZN", "type": "sells_to",            "note": "H100 / B200 for AWS EC2 P-instances" },
+    { "from": "NVDA", "to": "GOOGL", "type": "sells_to",           "note": "H100 / B200 for GCP AI infrastructure" },
+    { "from": "NVDA", "to": "DELL", "type": "sells_to",            "note": "NVIDIA-based GPU servers & workstations" },
+    { "from": "NVDA", "to": "HPE",  "type": "sells_to",            "note": "NVIDIA GPUs in HPE Cray AI systems" }
   ],
   "tier_meta": {
     "upstream_t2": { "label": "设备层 (Tier-2 Upstream)", "color": "#6c757d" },
