@@ -49,7 +49,7 @@
     { "from": "NVDA", "to": "HPE",  "type": "sells_to",            "note": "NVIDIA GPUs in HPE Cray AI systems" }
   ],
   "tier_meta": {
-    "upstream_t2": { "label": "设备层 (Tier-2 Upstream)", "color": "#6c757d" },
+    "upstream_t2": { "label": "设备层 (间接上游)", "color": "#e8a838" },
     "upstream":    { "label": "直接上游",                  "color": "#fd7e14" },
     "focal":       { "label": "核心公司",                  "color": "#0d6efd" },
     "peer":        { "label": "竞争对手",                  "color": "#dc3545" },

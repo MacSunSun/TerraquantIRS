@@ -12,12 +12,12 @@ from core.supply_chain import TIER_COLORS, TIER_LABELS, RELATIONSHIP_LABELS
 _VIS_CDN = "https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"
 
 EDGE_COLORS: dict[str, str] = {
-    "supplies_equipment": "#adb5bd",
-    "manufactures_for":   "#fd7e14",
+    "supplies_equipment": "#e8a838",   # amber — matches equipment tier colour
+    "manufactures_for":   "#fd7e14",   # orange
     "supplies_component": "#fd7e14",
     "packages_for":       "#ff9f43",
-    "sells_to":           "#198754",
-    "competes_with":      "#dc3545",
+    "sells_to":           "#198754",   # green
+    "competes_with":      "#dc3545",   # red
 }
 
 

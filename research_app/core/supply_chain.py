@@ -8,15 +8,15 @@ import networkx as nx
 DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "supply_chain.json"
 
 TIER_COLORS = {
-    "upstream_t2": "#6c757d",
-    "upstream":    "#fd7e14",
+    "upstream_t2": "#e8a838",   # amber — indirect upstream (equipment layer)
+    "upstream":    "#fd7e14",   # orange — direct upstream
     "focal":       "#0d6efd",
     "peer":        "#dc3545",
     "downstream":  "#198754",
 }
 
 TIER_LABELS = {
-    "upstream_t2": "设备层 (Tier-2)",
+    "upstream_t2": "设备层 (间接上游)",
     "upstream":    "直接上游",
     "focal":       "核心公司",
     "peer":        "竞争对手",
