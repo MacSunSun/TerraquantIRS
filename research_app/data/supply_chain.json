@@ -1,8 +1,8 @@
 {
   "version": "1.1",
-  "focal": "AMD",
+  "focal": "NVDA",
   "companies": {
-    "AMD":  { "name": "Advanced Micro Devices", "cik": "CIK0000002488", "tier": "focal",       "sector": "Semiconductors",            "note": "CPU / GPU / FPGA designer (fabless)" },
+    "AMD":  { "name": "Advanced Micro Devices", "cik": "CIK0000002488", "tier": "peer",         "sector": "Semiconductors",            "note": "CPU / GPU / FPGA designer (fabless)" },
     "TSM":  { "name": "Taiwan Semiconductor",   "cik": "CIK0001046179", "tier": "upstream",     "sector": "Foundry",                   "note": "Primary chip manufacturer (N4 / N3 process)" },
     "ASML": { "name": "ASML Holding",           "cik": "CIK0000937966", "tier": "upstream_t2",  "sector": "Semiconductor Equipment",   "note": "EUV lithography machines (sold to TSMC, Intel, Samsung)" },
     "AMAT": { "name": "Applied Materials",      "cik": "CIK0000006951", "tier": "upstream_t2",  "sector": "Semiconductor Equipment",   "note": "CVD / PVD deposition equipment" },
@@ -28,7 +28,7 @@
     "STX":  { "name": "Seagate Technology",     "cik": "CIK0001137789", "tier": "upstream",     "sector": "Hard Disk Drives",          "note": "HDD — nearline / mass-capacity drives for cloud & enterprise storage" },
     "WDC":  { "name": "Western Digital",        "cik": "CIK0000106040", "tier": "upstream",     "sector": "Hard Disk Drives",          "note": "HDD only post-SNDK spin-off — Cloud / Client / Consumer end markets" },
     "AMKR": { "name": "Amkor Technology",       "cik": "CIK0001047127", "tier": "upstream",     "sector": "Packaging (OSAT)",          "note": "Advanced chip packaging (SoIC / CoWoS)" },
-    "NVDA": { "name": "NVIDIA Corporation",     "cik": "CIK0001045810", "tier": "peer",         "sector": "Semiconductors",            "note": "GPU competitor — data center & AI" },
+    "NVDA": { "name": "NVIDIA Corporation",     "cik": "CIK0001045810", "tier": "focal",        "sector": "Semiconductors",            "note": "GPU & AI accelerator — data center leader" },
     "INTC": { "name": "Intel Corporation",      "cik": "CIK0000050863", "tier": "peer",         "sector": "Semiconductors",            "note": "CPU / GPU / foundry — CCG, DCAI, Intel Foundry segments" },
     "QCOM": { "name": "Qualcomm",               "cik": "CIK0000804328", "tier": "peer",         "sector": "Semiconductors",            "note": "Mobile & edge SoCs — QCT (chipsets) + QTL (IP licensing)" },
     "ARM":  { "name": "Arm Holdings",           "cik": "CIK0001973239", "tier": "upstream_t2",  "sector": "Semiconductor IP",          "note": "CPU/GPU ISA licensor — Royalty + License revenue (20-F)" },

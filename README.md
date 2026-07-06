@@ -1,6 +1,6 @@
 # TerraquantRIS — 半导体供应链投研系统
 
-A Streamlit-based investment research application for semiconductor supply chain analysis, built around AMD as the focal company with extensible support for any publicly listed company.
+A Streamlit-based investment research application for semiconductor supply chain analysis, built around **NVIDIA (NVDA)** as the focal company with extensible support for any publicly listed company.
 
 **Live demo:** [terraquant-irs.streamlit.app](https://terraquant-irs.streamlit.app)
 
@@ -158,7 +158,7 @@ No server rental or environment configuration needed.
 
 ---
 
-## Current Supply Chain Coverage (AMD-centric)
+## Current Supply Chain Coverage (NVDA-centric)
 
 | Company | Ticker | Role |
 |---|---|---|
@@ -209,7 +209,7 @@ No server rental or environment configuration needed.
 | Alphabet | GOOGL | GCP (EPYC + Instinct GPUs) |
 | Dell | DELL | Server & workstation OEM |
 | HPE | HPE | ProLiant servers |
-| NVIDIA | NVDA | GPU competitor |
+| NVIDIA | NVDA | Focal company — GPU & AI accelerator leader |
 | Intel | INTC | CPU / GPU / foundry competitor (CCG, DCAI, Intel Foundry) |
 | Qualcomm | QCOM | Mobile / edge SoC competitor (QCT + QTL) |
 | Arm Holdings | ARM | CPU/GPU IP licensor (upstream, 20-F) |

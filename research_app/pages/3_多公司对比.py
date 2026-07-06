@@ -25,7 +25,7 @@ with st.sidebar:
     selected = st.multiselect(
         "选择公司（最多 8 家）",
         all_tickers,
-        default=["AMD", "NVDA", "MU", "INTC", "QCOM", "ARM", "TSM", "SNDK"],
+        default=["NVDA", "AMD", "MU", "INTC", "QCOM", "ARM", "TSM", "SNDK"],
         max_selections=8,
     )
     st.divider()
