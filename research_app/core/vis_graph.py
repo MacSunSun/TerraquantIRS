@@ -28,7 +28,7 @@ def _spread(count: int, spacing: int = 90) -> list[float]:
 
 def build_full_map_payload(chain: dict, active_tiers: set[str] | None = None, height: int = 620) -> dict:
     """Payload for the full supply-chain map (physics + hover highlight)."""
-    focal = chain.get("focal", "AMD")
+    focal = chain.get("focal", "NVDA")
     active_tiers = active_tiers or set(TIER_COLORS.keys())
 
     # ---- nodes ---------------------------------------------------------------

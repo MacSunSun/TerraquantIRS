@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 
-from core.supply_chain import load_chain, TIER_LABELS, TIER_COLORS
+from core.supply_chain import load_chain, TIER_LABELS, TIER_COLORS, get_focal
 from core.price_data import get_price_history, get_info, key_metrics
 from core.sec_data import get_quarterly_financials, get_recent_filings
 
@@ -31,7 +31,8 @@ tickers = sorted(chain["companies"].keys())
 def _default_index() -> int:
     if _preselect and _preselect in tickers:
         return tickers.index(_preselect)
-    return tickers.index("AMD") if "AMD" in tickers else 0
+    focal = get_focal(chain)
+    return tickers.index(focal) if focal in tickers else 0
 
 SELECT_KEY = "overview_company"
 if _preselect and _preselect in tickers:

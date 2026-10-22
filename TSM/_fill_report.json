@@ -1,0 +1,31 @@
+{
+  "ticker": "TSM",
+  "status": "complete",
+  "pdfs": 11,
+  "massive_daily": 1961,
+  "earnings_quarters": 11,
+  "parser_note": "IR PDF text normalized; SEC IFRS annual sheet included",
+  "inventory": [
+    "DIR 10Q_10K/ files=26",
+    "DIR tsm_massive_data/ files=7",
+    "FILE 2024-04-18_TSM_Reports_First_Quarter_2024_Financial.pdf size=161594",
+    "FILE 2024-07-18_TSM_Reports_Second_Quarter_2024_Financial.pdf size=177771",
+    "FILE 2024-10-17_TSM_Reports_Third_Quarter_2024_Financial.pdf size=177194",
+    "FILE 2025-01-16_TSM_Reports_Fourth_Quarter_2024_Financial.pdf size=178679",
+    "FILE 2025-04-17_TSM_Reports_First_Quarter_2025_Financial.pdf size=179018",
+    "FILE 2025-07-17_TSM_Reports_Second_Quarter_2025_Financial.pdf size=177698",
+    "FILE 2025-10-16_TSM_Reports_Third_Quarter_2025_Financial.pdf size=160423",
+    "FILE 2026-01-15_TSM_Reports_Fourth_Quarter_2025_Financial.pdf size=217968",
+    "FILE 2026-04-16_TSM_Reports_First_Quarter_2026_Financial.pdf size=182904",
+    "FILE 2026-07-16_TSM_Reports_Second_Quarter_2026_Financial.pdf size=171969",
+    "FILE 2026-10-15_TSM_Reports_Third_Quarter_2026_Financial.pdf size=171803",
+    "FILE _fill_report.json size=3011",
+    "FILE _fill_tsm_materials.py size=20352",
+    "FILE _pull_massive_data.py size=1078",
+    "FILE filing_index.csv size=3539",
+    "FILE tsm_earnings_extracted.csv size=2093",
+    "FILE tsm_financial_metrics.xlsx size=7388",
+    "FILE TSM_price_prediction_model.ipynb size=1465",
+    "FILE TSM_Reports_Fiscal_Overview.xlsx size=8164"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "ticker": "MU",
+  "source": "Massive API (api.massive.com)",
+  "auth": "MASSIVE_API_KEY via C:/MegaQuant/.env (not stored here)",
+  "pulled_at_utc": "2026-10-21T11:03:37.496620+00:00",
+  "daily_bars": 1961,
+  "weekly_bars": 408,
+  "files": [
+    "history_daily.csv",
+    "history_1y.csv",
+    "history_weekly.csv",
+    "ticker_details.json",
+    "dividends.json",
+    "splits.json"
+  ]
+}

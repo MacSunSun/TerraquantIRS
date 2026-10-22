@@ -1,0 +1,69 @@
+{
+  "results": [
+    {
+      "execution_date": "2009-07-15",
+      "id": "E45d25a825a0e1d7e0c6974ca844bb1d2b52cf0c450542523a226f971968cf3a7",
+      "split_from": 1,
+      "split_to": 1.0019999,
+      "ticker": "TSM"
+    },
+    {
+      "execution_date": "2009-07-15",
+      "id": "Ef5a5067e5f53b0c054e3f146a3b5ad98cfa3f06715bf61acd5be6c0da6850af2",
+      "split_from": 1,
+      "split_to": 1.0029998,
+      "ticker": "TSM"
+    },
+    {
+      "execution_date": "2008-07-16",
+      "id": "Ede5ea1e2b182b1f1564a7a8945cd88167f7eddb60ec7113828ea162f067df146",
+      "split_from": 1,
+      "split_to": 1.003025,
+      "ticker": "TSM"
+    },
+    {
+      "execution_date": "2008-07-16",
+      "id": "E7cae60d80c7e5f1bdffabc8004336e159ef8b292a4817c0b00f1b692291f1505",
+      "split_from": 1,
+      "split_to": 1.0020167,
+      "ticker": "TSM"
+    },
+    {
+      "execution_date": "2007-06-08",
+      "id": "E3215e9f030d76ea7ba7be78d6803dffeb24914bde7428e8ff6c071b41eda8bc3",
+      "split_from": 1,
+      "split_to": 1.0019996,
+      "ticker": "TSM"
+    },
+    {
+      "execution_date": "2007-06-08",
+      "id": "Eb1535e86af8df369cb114cf43cf8dc927ad294e9f65718e5a141009606b3afa9",
+      "split_from": 1,
+      "split_to": 1.0029995,
+      "ticker": "TSM"
+    },
+    {
+      "execution_date": "2006-06-20",
+      "id": "E86aad38fbf4455694064d47b6d052be04561cdc4a691fd9af6721aa4684c67a3",
+      "split_from": 1,
+      "split_to": 1.0149951,
+      "ticker": "TSM"
+    },
+    {
+      "execution_date": "2005-06-13",
+      "id": "Ecfd8c45af5cd6ed57869910f86656956de921a0823724aecf72a2fce194fb1ce",
+      "split_from": 1,
+      "split_to": 1.0499971,
+      "ticker": "TSM"
+    },
+    {
+      "execution_date": "2004-06-14",
+      "id": "E6057fb2c9c4c33b97a971af16de3528bc60fa14bbb47fbdde08d024a4586755e",
+      "split_from": 100,
+      "split_to": 114.0866889,
+      "ticker": "TSM"
+    }
+  ],
+  "status": "OK",
+  "request_id": "3d63969ed015aa02cbe9b799ac663411"
+}

@@ -11,7 +11,7 @@ from core.text_mining import mine_all_filings, summarise
 from core.filing_paths import local_annual_dirs
 from core.supply_chain import (
     load_chain, save_chain, add_company, add_relationship,
-    TIER_LABELS, TIER_COLORS,
+    TIER_LABELS, TIER_COLORS, get_focal,
 )
 
 st.set_page_config(page_title="10-K 文本挖掘", page_icon="📄", layout="wide")
@@ -33,8 +33,9 @@ with st.sidebar:
 
 # ── Path config ───────────────────────────────────────────────────────────────
 _LOCAL = local_annual_dirs()
-_DEFAULT_TICKER = "AMD" if "AMD" in _LOCAL else (next(iter(_LOCAL)) if _LOCAL else "AMD")
-DEFAULT_DIR = Path(_LOCAL.get(_DEFAULT_TICKER, r"e:\Quant\Quant\Investment Research\AMD\10Q_10K\amd\10-K"))
+_FOCAL = get_focal()
+_DEFAULT_TICKER = _FOCAL if _FOCAL in _LOCAL else (next(iter(_LOCAL)) if _LOCAL else _FOCAL)
+DEFAULT_DIR = Path(_LOCAL.get(_DEFAULT_TICKER, rf"e:\Quant\Quant\Investment Research\{_FOCAL}\10Q_10K\{_FOCAL.lower()}\10-K"))
 
 st.title("📄 SEC 文本挖掘 — 自动提取供应链关系")
 st.caption("从 SEC 原始文件（10-K / 20-F）中提取公司名称，按出现频次排序，可直接加入供应链地图。")
@@ -203,7 +204,7 @@ if run or CACHE_KEY in st.session_state:
             default=new_tickers[:5],
         )
 
-        focal_ticker = chain.get("focal", "AMD")
+        focal_ticker = get_focal(chain)
 
         if to_add and st.button("➕ 加入供应链地图", type="primary"):
             added = []

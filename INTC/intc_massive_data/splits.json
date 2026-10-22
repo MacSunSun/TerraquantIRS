@@ -1,0 +1,62 @@
+{
+  "results": [
+    {
+      "execution_date": "2000-07-31",
+      "id": "Pa79ccb62f0636acbc3f27e24040059061963a0ac19fded2548f684b8a626c60a",
+      "split_from": 1,
+      "split_to": 2,
+      "ticker": "INTC"
+    },
+    {
+      "execution_date": "1999-04-12",
+      "id": "P14f41ff3e975bc6f21b958ac5c1f39f00741f73ca0a74966419a8acd18b4236c",
+      "split_from": 1,
+      "split_to": 2,
+      "ticker": "INTC"
+    },
+    {
+      "execution_date": "1997-07-14",
+      "id": "P7781dcc447d55a596ffef8c13b637efe4d07a329693251ae27c1fcee2f261e50",
+      "split_from": 1,
+      "split_to": 2,
+      "ticker": "INTC"
+    },
+    {
+      "execution_date": "1995-06-19",
+      "id": "Pd2e4201528440585e7ede0d4feb962952f27a4c9bedfad09039b5508f147b284",
+      "split_from": 1,
+      "split_to": 2,
+      "ticker": "INTC"
+    },
+    {
+      "execution_date": "1993-06-07",
+      "id": "P7b3a09fd62a678738d9c453461e1bdaa7014e536c067ed1efc82802643d5374b",
+      "split_from": 1,
+      "split_to": 2,
+      "ticker": "INTC"
+    },
+    {
+      "execution_date": "1987-10-29",
+      "id": "P547f6bcc838d78ced0d3a65c6f4688e0f9aad7eec0377e4f8bc18e4bf06810b5",
+      "split_from": 2,
+      "split_to": 3,
+      "ticker": "INTC"
+    },
+    {
+      "execution_date": "1983-07-01",
+      "id": "P8db8b27748a8f45a7df94dca9ec089dcd320e784c59f1180932a0d9884a313f0",
+      "split_from": 1,
+      "split_to": 2,
+      "ticker": "INTC"
+    },
+    {
+      "execution_date": "1980-10-09",
+      "id": "P36487df4d2d9c5d1431756a83cb149a48ae107da66f86e2fac3150b123a25f35",
+      "split_from": 1,
+      "split_to": 2,
+      "ticker": "INTC"
+    }
+  ],
+  "status": "OK",
+  "request_id": "dbe12ec344957bad1134e67d24a202c9"
+}

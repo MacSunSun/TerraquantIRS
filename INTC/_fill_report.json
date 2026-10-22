@@ -1,0 +1,108 @@
+{
+  "ticker": "INTC",
+  "started": "2026-10-22T14:48:57.166541",
+  "10k_backfill": {
+    "added": [
+      {
+        "file": "0000050863-20-000011.txt",
+        "label": "FY2019",
+        "bytes": 143126396
+      },
+      {
+        "file": "0000050863-21-000010.txt",
+        "label": "FY2020",
+        "bytes": 62377334
+      },
+      {
+        "file": "0000050863-22-000007.txt",
+        "label": "FY2021",
+        "bytes": 81940551
+      },
+      {
+        "file": "0000050863-24-000010.txt",
+        "label": "FY2023",
+        "bytes": 60186720
+      }
+    ],
+    "skipped": [],
+    "index_rows": 106,
+    "index_10k": 9
+  },
+  "pdfs_added": [
+    "2023-10-26_INTC_Reports_Third_Quarter_2023_Financial.pdf",
+    "2024-01-25_INTC_Reports_Fourth_Quarter_and_Full_Year_2023.pdf",
+    "2024-04-25_INTC_Reports_First_Quarter_2024_Financial.pdf",
+    "2024-08-01_INTC_Reports_Second_Quarter_2024_Financial.pdf",
+    "2024-10-31_INTC_Reports_Third_Quarter_2024_Financial.pdf",
+    "2025-01-30_INTC_Reports_Fourth_Quarter_and_Full_Year_2024.pdf",
+    "2025-04-24_INTC_Reports_First_Quarter_2025_Financial.pdf",
+    "2025-07-24_INTC_Reports_Second_Quarter_2025_Financial.pdf",
+    "2025-10-23_INTC_Reports_Third_Quarter_2025_Financial.pdf",
+    "2026-01-22_INTC_Reports_Fourth_Quarter_and_Full_Year_2025.pdf",
+    "2026-04-23_INTC_Reports_First_Quarter_2026_Financial.pdf",
+    "2026-07-23_INTC_Reports_Second_Quarter_2026_Financial.pdf"
+  ],
+  "financials": {
+    "overview": "INTC_Reports_Fiscal_Overview.xlsx",
+    "metrics": "intc_financial_metrics.xlsx",
+    "extracted": "intc_10q_extracted.csv",
+    "quarters": 35
+  },
+  "massive": {
+    "ticker": "INTC",
+    "source": "Massive API (api.massive.com)",
+    "auth": "MASSIVE_API_KEY via C:/MegaQuant/.env (not stored here)",
+    "pulled_at_utc": "2026-10-22T06:49:56.258586+00:00",
+    "daily_bars": 1962,
+    "weekly_bars": 408,
+    "files": [
+      "history_daily.csv",
+      "history_1y.csv",
+      "history_weekly.csv",
+      "ticker_details.json",
+      "dividends.json",
+      "splits.json"
+    ]
+  },
+  "notebook": "INTC_price_prediction_model.ipynb",
+  "helpers": [
+    "_pull_massive_data.py"
+  ],
+  "finished": "2026-10-22T14:49:56.260477",
+  "inventory_after": [
+    "DIR 10Q_10K/ files=106",
+    "DIR _earnings_html/ files=9",
+    "DIR intc_massive_data/ files=7",
+    "FILE 2023-10-26_INTC_Reports_Third_Quarter_2023_Financial.pdf size=491323",
+    "FILE 2024-01-25_INTC_Reports_Fourth_Quarter_and_Full_Year_2023.pdf size=628147",
+    "FILE 2024-04-25_INTC_Reports_First_Quarter_2024_Financial.pdf size=132679",
+    "FILE 2024-08-01_INTC_Reports_Second_Quarter_2024_Financial.pdf size=532862",
+    "FILE 2024-10-31_INTC_Reports_Third_Quarter_2024_Financial.pdf size=535189",
+    "FILE 2025-01-30_INTC_Reports_Fourth_Quarter_and_Full_Year_2024.pdf size=175386",
+    "FILE 2025-04-24_INTC_Reports_First_Quarter_2025_Financial.pdf size=149098",
+    "FILE 2025-07-24_INTC_Reports_Second_Quarter_2025_Financial.pdf size=157889",
+    "FILE 2025-10-23_INTC_Reports_Third_Quarter_2025_Financial.pdf size=534258",
+    "FILE 2026-01-22_INTC_Reports_Fourth_Quarter_and_Full_Year_2025.pdf size=678325",
+    "FILE 2026-04-23_INTC_Reports_First_Quarter_2026_Financial.pdf size=506086",
+    "FILE 2026-07-23_INTC_Reports_Second_Quarter_2026_Financial.pdf size=513825",
+    "FILE _fill_intc_materials.py size=24453",
+    "FILE _pull_massive_data.py size=1046",
+    "FILE filing_index.csv size=14365",
+    "FILE intc_10q_extracted.csv size=5609",
+    "FILE intc_financial_metrics.xlsx size=9875",
+    "FILE INTC_price_prediction_model.ipynb size=1263",
+    "FILE INTC_Reports_Fiscal_Overview.xlsx size=8020"
+  ],
+  "10k_count_after": 9,
+  "10k_files_after": [
+    "0000050863-18-000007.txt",
+    "0000050863-19-000007.txt",
+    "0000050863-20-000011.txt",
+    "0000050863-21-000010.txt",
+    "0000050863-22-000007.txt",
+    "0000050863-23-000006.txt",
+    "0000050863-24-000010.txt",
+    "0000050863-25-000009.txt",
+    "0000050863-26-000011.txt"
+  ]
+}

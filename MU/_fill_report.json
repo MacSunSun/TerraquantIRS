@@ -1,0 +1,69 @@
+{
+  "ticker": "MU",
+  "started": "2026-10-21T19:03:05.222513",
+  "pdfs_added": [
+    "2023-12-20_MU_Reports_First_Quarter_2024_Financial.pdf",
+    "2024-03-20_MU_Reports_Second_Quarter_2024_Financial.pdf",
+    "2024-06-26_MU_Reports_Third_Quarter_2024_Financial.pdf",
+    "2024-09-25_MU_Reports_Fourth_Quarter_and_Full_Year_2024.pdf",
+    "2024-12-18_MU_Reports_First_Quarter_2025_Financial.pdf",
+    "2025-03-20_MU_Reports_Second_Quarter_2025_Financial.pdf",
+    "2025-06-25_MU_Reports_Third_Quarter_2025_Financial.pdf",
+    "2025-09-23_MU_Reports_Fourth_Quarter_and_Full_Year_2025.pdf",
+    "2025-12-17_MU_Reports_First_Quarter_2026_Financial.pdf",
+    "2026-03-18_MU_Reports_Second_Quarter_2026_Financial.pdf",
+    "2026-06-24_MU_Reports_Third_Quarter_2026_Financial.pdf",
+    "2026-09-30_MU_Reports_Fourth_Quarter_and_Full_Year_2026.pdf"
+  ],
+  "financials": {
+    "overview": "MU_Reports_Fiscal_Overview.xlsx",
+    "metrics": "mu_financial_metrics.xlsx",
+    "extracted": "mu_10q_extracted.csv",
+    "quarters": 30
+  },
+  "massive": {
+    "ticker": "MU",
+    "source": "Massive API (api.massive.com)",
+    "auth": "MASSIVE_API_KEY via C:/MegaQuant/.env (not stored here)",
+    "pulled_at_utc": "2026-10-21T11:03:37.496620+00:00",
+    "daily_bars": 1961,
+    "weekly_bars": 408,
+    "files": [
+      "history_daily.csv",
+      "history_1y.csv",
+      "history_weekly.csv",
+      "ticker_details.json",
+      "dividends.json",
+      "splits.json"
+    ]
+  },
+  "notebook": "MU_price_prediction_model.ipynb",
+  "helpers": [
+    "_pull_massive_data.py"
+  ],
+  "finished": "2026-10-21T19:03:37.498712",
+  "inventory_after": [
+    "DIR 10Q_10K/ files=128",
+    "DIR _earnings_html/ files=12",
+    "DIR mu_massive_data/ files=7",
+    "FILE 2023-12-20_MU_Reports_First_Quarter_2024_Financial.pdf size=530761",
+    "FILE 2024-03-20_MU_Reports_Second_Quarter_2024_Financial.pdf size=595196",
+    "FILE 2024-06-26_MU_Reports_Third_Quarter_2024_Financial.pdf size=603218",
+    "FILE 2024-09-25_MU_Reports_Fourth_Quarter_and_Full_Year_2024.pdf size=697657",
+    "FILE 2024-12-18_MU_Reports_First_Quarter_2025_Financial.pdf size=506618",
+    "FILE 2025-03-20_MU_Reports_Second_Quarter_2025_Financial.pdf size=558513",
+    "FILE 2025-06-25_MU_Reports_Third_Quarter_2025_Financial.pdf size=564089",
+    "FILE 2025-09-23_MU_Reports_Fourth_Quarter_and_Full_Year_2025.pdf size=712738",
+    "FILE 2025-12-17_MU_Reports_First_Quarter_2026_Financial.pdf size=557467",
+    "FILE 2026-03-18_MU_Reports_Second_Quarter_2026_Financial.pdf size=614737",
+    "FILE 2026-06-24_MU_Reports_Third_Quarter_2026_Financial.pdf size=618792",
+    "FILE 2026-09-30_MU_Reports_Fourth_Quarter_and_Full_Year_2026.pdf size=707459",
+    "FILE _fill_mu_materials.py size=19794",
+    "FILE _pull_massive_data.py size=1040",
+    "FILE filing_index.csv size=16823",
+    "FILE mu_10q_extracted.csv size=4102",
+    "FILE mu_financial_metrics.xlsx size=9261",
+    "FILE MU_price_prediction_model.ipynb size=1387",
+    "FILE MU_Reports_Fiscal_Overview.xlsx size=8289"
+  ]
+}

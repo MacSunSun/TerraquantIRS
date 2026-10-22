@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 
-from core.supply_chain import load_chain, TIER_LABELS, TIER_COLORS
+from core.supply_chain import load_chain, TIER_LABELS, TIER_COLORS, get_focal
 from core.concentration import get_concentration_data, KNOWN_SEGMENTS
 from core.filing_paths import local_annual_dirs
 
@@ -29,10 +29,11 @@ with st.sidebar:
     st.caption("分部营收 · 客户集中度 · 供应链关联分析")
     st.divider()
 
+    focal = get_focal(chain)
     selected = st.selectbox(
         "选择公司",
         tickers,
-        index=tickers.index("AMD") if "AMD" in tickers else 0,
+        index=tickers.index(focal) if focal in tickers else 0,
     )
     meta       = chain["companies"][selected]
     tier       = meta.get("tier", "")

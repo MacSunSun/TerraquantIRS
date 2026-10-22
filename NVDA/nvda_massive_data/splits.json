@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "execution_date": "2024-06-10",
+      "id": "Ea86fa28faba275487714f7b3f199ee4a04d2c271b1471648fbd945397a6008ba",
+      "split_from": 1,
+      "split_to": 10,
+      "ticker": "NVDA"
+    },
+    {
+      "execution_date": "2021-07-20",
+      "id": "E9b6d16a5a1f1ab1f5c8db9ab357419b4d1efb7585ba090809310fafcd827678e",
+      "split_from": 1,
+      "split_to": 4,
+      "ticker": "NVDA"
+    },
+    {
+      "execution_date": "2007-09-11",
+      "id": "E3c64a7eadb9371ec1548f0d4349d5495586952e2c030ec9c794c6a81de20524a",
+      "split_from": 2,
+      "split_to": 3,
+      "ticker": "NVDA"
+    },
+    {
+      "execution_date": "2006-04-07",
+      "id": "Ebaa656ed041f72ae585526f1dbe6829b372a8b57b9795b4170e248542d08356f",
+      "split_from": 1,
+      "split_to": 2,
+      "ticker": "NVDA"
+    }
+  ],
+  "status": "OK",
+  "request_id": "8963589d0ea23bb0ccf8ff36765459ee"
+}

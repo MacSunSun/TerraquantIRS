@@ -1,0 +1,63 @@
+{
+  "ticker": "NVDA",
+  "started": "2026-10-20T16:44:02.610095",
+  "pdfs_added": [
+    "2026-08-26_NVDA_Reports_Second_Quarter_2027_Financial.pdf",
+    "2026-05-20_NVDA_Reports_First_Quarter_2027_Financial.pdf",
+    "2026-02-25_NVDA_Reports_Fourth_Quarter_and_Full_Year_2026.pdf",
+    "2025-11-19_NVDA_Reports_Third_Quarter_2026_Financial.pdf",
+    "2025-08-27_NVDA_Reports_Second_Quarter_2026_Financial.pdf",
+    "2025-05-28_NVDA_Reports_First_Quarter_2026_Financial.pdf",
+    "2025-02-26_NVDA_Reports_Fourth_Quarter_and_Full_Year_2025.pdf",
+    "2024-11-20_NVDA_Reports_Third_Quarter_2025_Financial.pdf",
+    "2024-08-28_NVDA_Reports_Second_Quarter_2025_Financial.pdf",
+    "2024-05-22_NVDA_Reports_First_Quarter_2025_Financial.pdf",
+    "2024-02-21_NVDA_Reports_Fourth_Quarter_and_Full_Year_2024.pdf"
+  ],
+  "financials": {
+    "overview": "NVDA_Reports_Fiscal_Overview.xlsx",
+    "metrics": "nvda_financial_metrics.xlsx",
+    "extracted": "nvda_10q_extracted.csv",
+    "quarters": 12
+  },
+  "massive": {
+    "ticker": "NVDA",
+    "source": "Massive API (api.massive.com)",
+    "auth": "MASSIVE_API_KEY via C:/MegaQuant/.env (not stored here)",
+    "pulled_at_utc": "2026-10-20T08:44:15.155245+00:00",
+    "daily_bars": 1960,
+    "weekly_bars": 408,
+    "files": [
+      "history_daily.csv",
+      "history_1y.csv",
+      "history_weekly.csv",
+      "ticker_details.json",
+      "dividends.json",
+      "splits.json"
+    ]
+  },
+  "notebook": "NVDA_price_prediction_model.ipynb",
+  "helper": "_pull_massive_data.py",
+  "finished": "2026-10-20T16:44:15.156627",
+  "inventory_after": [
+    "DIR 10Q_10K/ files=107",
+    "FILE 2024-02-21_NVDA_Reports_Fourth_Quarter_and_Full_Year_2024.pdf size=83702",
+    "FILE 2024-05-22_NVDA_Reports_First_Quarter_2025_Financial.pdf size=75494",
+    "FILE 2024-08-28_NVDA_Reports_Second_Quarter_2025_Financial.pdf size=83753",
+    "FILE 2024-11-20_NVDA_Reports_Third_Quarter_2025_Financial.pdf size=85389",
+    "FILE 2025-02-26_NVDA_Reports_Fourth_Quarter_and_Full_Year_2025.pdf size=84498",
+    "FILE 2025-05-28_NVDA_Reports_First_Quarter_2026_Financial.pdf size=86192",
+    "FILE 2025-08-27_NVDA_Reports_Second_Quarter_2026_Financial.pdf size=89323",
+    "FILE 2025-11-19_NVDA_Reports_Third_Quarter_2026_Financial.pdf size=90552",
+    "FILE 2026-02-25_NVDA_Reports_Fourth_Quarter_and_Full_Year_2026.pdf size=97444",
+    "FILE 2026-05-20_NVDA_Reports_First_Quarter_2027_Financial.pdf size=77837",
+    "FILE 2026-08-26_NVDA_Reports_Second_Quarter_2027_Financial.pdf size=85376",
+    "FILE _pull_massive_data.py size=1150",
+    "FILE filing_index.csv size=14714",
+    "FILE nvda_10q_extracted.csv size=1661",
+    "FILE nvda_financial_metrics.xlsx size=7198",
+    "DIR nvda_massive_data/ files=7",
+    "FILE NVDA_price_prediction_model.ipynb size=1658",
+    "FILE NVDA_Reports_Fiscal_Overview.xlsx size=6802"
+  ]
+}

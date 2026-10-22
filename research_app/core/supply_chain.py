@@ -37,6 +37,13 @@ def load_chain() -> dict:
     return json.loads(DATA_PATH.read_text(encoding="utf-8"))
 
 
+def get_focal(chain: dict | None = None) -> str:
+    """Return the focal (center) company ticker from chain config."""
+    if chain is None:
+        chain = load_chain()
+    return chain.get("focal", "NVDA")
+
+
 def save_chain(chain: dict) -> None:
     DATA_PATH.write_text(json.dumps(chain, ensure_ascii=False, indent=2), encoding="utf-8")
 

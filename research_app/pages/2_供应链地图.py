@@ -9,7 +9,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import streamlit as st
-import pandas as pd
 
 from core.supply_chain import (
     load_chain, save_chain,
@@ -125,18 +124,3 @@ tier_cols[-1].markdown(
     unsafe_allow_html=True,
 )
 
-# ── Adjacency table ───────────────────────────────────────────────────────────
-with st.expander("关系列表", expanded=False):
-    rel_rows = []
-    for rel in chain["relationships"]:
-        f_name = chain["companies"].get(rel["from"], {}).get("name", rel["from"])
-        t_name = chain["companies"].get(rel["to"],   {}).get("name", rel["to"])
-        rel_rows.append({
-            "起点":  rel["from"],
-            "起点公司": f_name,
-            "关系":  RELATIONSHIP_LABELS.get(rel["type"], rel["type"]),
-            "终点":  rel["to"],
-            "终点公司": t_name,
-            "备注":  rel.get("note", ""),
-        })
-    st.dataframe(pd.DataFrame(rel_rows), use_container_width=True, hide_index=True)

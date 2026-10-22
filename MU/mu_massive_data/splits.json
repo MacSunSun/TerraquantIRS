@@ -1,0 +1,27 @@
+{
+  "results": [
+    {
+      "execution_date": "2000-05-02",
+      "id": "P59d1f92e05f7e364193dc5447c5450e0d1d2d1d0a445d40bba61e0c25372affd",
+      "split_from": 1,
+      "split_to": 2,
+      "ticker": "MU"
+    },
+    {
+      "execution_date": "1995-05-23",
+      "id": "P240bf2f04ea55985adc031bacdcfb9efe768a9cb685e160358f6d947225fa4fd",
+      "split_from": 1,
+      "split_to": 2,
+      "ticker": "MU"
+    },
+    {
+      "execution_date": "1994-04-19",
+      "id": "P97176ab98b1b19224f2765523bbc54498defed5ad72041f2fcfcbbfd27bda11f",
+      "split_from": 2,
+      "split_to": 5,
+      "ticker": "MU"
+    }
+  ],
+  "status": "OK",
+  "request_id": "1be23bcac695c49613f544180ace17e2"
+}
